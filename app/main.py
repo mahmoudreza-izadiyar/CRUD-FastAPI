@@ -1,11 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import item
+from app.routes import item, auth
 from app.database.database import engine
 from app.models import item as item_model
+from app.models import user as user_model
 
 # Create the database tables
 item_model.Base.metadata.create_all(bind=engine)
+user_model.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="FastAPI CRUD with PostgreSQL",
@@ -24,6 +26,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(item.router)
+app.include_router(auth.router)
 
 
 @app.get("/")

@@ -1,6 +1,12 @@
 import axios from 'axios';
+import * as authService from './authService';
 
 const API_URL = '/items';
+
+// Helper to ensure auth headers are set
+const setAuthHeaders = () => {
+  authService.initializeAuth();
+};
 
 // Get all items
 export const getItems = async (filters = {}) => {
@@ -40,6 +46,7 @@ export const getItemById = async (id) => {
 // Create new item
 export const createItem = async (itemData) => {
   try {
+    setAuthHeaders(); // Ensure auth headers are set
     const response = await axios.post(API_URL + '/', itemData);
     return response.data;
   } catch (error) {
@@ -51,6 +58,7 @@ export const createItem = async (itemData) => {
 // Update item
 export const updateItem = async (id, itemData) => {
   try {
+    setAuthHeaders(); // Ensure auth headers are set
     const response = await axios.put(`${API_URL}/${id}`, itemData);
     return response.data;
   } catch (error) {
@@ -62,6 +70,7 @@ export const updateItem = async (id, itemData) => {
 // Delete item
 export const deleteItem = async (id) => {
   try {
+    setAuthHeaders(); // Ensure auth headers are set
     await axios.delete(`${API_URL}/${id}`);
     return true;
   } catch (error) {

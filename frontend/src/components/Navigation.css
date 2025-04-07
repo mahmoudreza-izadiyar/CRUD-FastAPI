@@ -1,0 +1,117 @@
+.navigation {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem 0;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #111827;
+}
+
+.brand-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.brand-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: #f3f4f6;
+  border-radius: 0.375rem;
+}
+
+.user-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #4b5563;
+}
+
+.username {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.nav-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.login-button {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+}
+
+.login-button:hover {
+  background-color: #e5e7eb;
+}
+
+.register-button, .logout-button {
+  background-color: #4b5563;
+  color: #ffffff;
+  border: none;
+}
+
+.register-button:hover, .logout-button:hover {
+  background-color: #374151;
+}
+
+.logout-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+@media (max-width: 768px) {
+  .brand-text {
+    font-size: 1rem;
+  }
+  
+  .nav-button {
+    padding: 0.375rem 0.75rem;
+  }
+  
+  .username {
+    display: none;
+  }
+} 

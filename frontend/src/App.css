@@ -18,8 +18,13 @@ body {
 
 .app {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  background-color: #f3f4f6;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
 }
 
 button, input, select, textarea {

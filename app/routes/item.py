@@ -4,7 +4,9 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from typing import List, Optional, Dict, Any
 from app.database.database import get_db
 from app.models.item import Item as ItemModel
+from app.models.user import User
 from app.schemas.item import Item, ItemCreate, ItemUpdate
+from app.security.auth import get_current_active_user
 import logging
 
 # Set up logging
@@ -31,13 +33,18 @@ def str_to_bool(value: Optional[str]) -> Optional[bool]:
 
 
 @router.post("/", response_model=Item, status_code=status.HTTP_201_CREATED)
-async def create_item(item: ItemCreate, db: Session = Depends(get_db)):
+async def create_item(
+    item: ItemCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
     """
     Create a new item.
 
     Args:
         item: Item data to create
         db: Database session
+        current_user: Current authenticated user
 
     Returns:
         Created item
@@ -172,7 +179,8 @@ async def read_item(
 async def update_item(
     item_id: int = Path(..., gt=0, description="The ID of the item to update"),
     item: ItemUpdate = ...,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Update an existing item.
@@ -181,6 +189,7 @@ async def update_item(
         item_id: ID of the item to update
         item: Updated item data
         db: Database session
+        current_user: Current authenticated user
 
     Returns:
         Updated item
@@ -239,7 +248,8 @@ async def update_item(
 @router.delete("/{item_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
 async def delete_item(
     item_id: int = Path(..., gt=0, description="The ID of the item to delete"),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Delete an item.
@@ -247,6 +257,7 @@ async def delete_item(
     Args:
         item_id: ID of the item to delete
         db: Database session
+        current_user: Current authenticated user
 
     Returns:
         None
