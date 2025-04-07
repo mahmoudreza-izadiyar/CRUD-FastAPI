@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { FaPlus, FaSearch, FaFilter, FaTimes } from 'react-icons/fa';
+import { Package, Search, Filter, X } from 'lucide-react';
 import { getItems, createItem, updateItem, deleteItem } from '../api/itemService';
 import ItemGrid from './ItemGrid';
 import ItemForm from './ItemForm';
+import ItemCard from './ItemCard';
 import toast, { Toaster } from 'react-hot-toast';
 import './HomePage.css';
 
@@ -156,114 +157,152 @@ const HomePage = () => {
   };
 
   return (
-    <div className="home-page">
+    <div className="min-h-screen bg-gray-50">
       <Toaster position="top-right" />
       
-      <header className="page-header">
-        <h1>Inventory Items</h1>
-        <button className="add-button" onClick={handleAddClick}>
-          <FaPlus /> Add Item
-        </button>
-      </header>
-
-      <div className="search-filter-container">
-        <form className="search-form" onSubmit={handleSearch}>
-          <div className="search-input-container">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center">
+            <Package className="h-8 w-8 text-gray-900 mr-3" />
+            <h1 className="text-3xl font-bold text-gray-900">Items Catalog</h1>
+          </div>
+          
+          <div className="relative">
+            <Search className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search items..."
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
+              onKeyPress={(e) => e.key === 'Enter' && fetchItems()}
             />
-            <button type="submit" className="search-button">
-              <FaSearch />
-            </button>
           </div>
-          
-          <button 
-            type="button" 
-            className="filter-toggle-button"
-            onClick={handleFilterToggle}
-          >
-            <FaFilter /> {showFilters ? 'Hide Filters' : 'Show Filters'}
-          </button>
-        </form>
+        </div>
 
-        {showFilters && (
-          <div className="filters-container">
-            <div className="filter-group">
-              <label>Min Price ($)</label>
-              <input
-                type="number"
-                name="min_price"
-                value={filters.min_price}
-                onChange={handleFilterChange}
-                min="0"
-                step="0.01"
-              />
-            </div>
-            
-            <div className="filter-group">
-              <label>Max Price ($)</label>
-              <input
-                type="number"
-                name="max_price"
-                value={filters.max_price}
-                onChange={handleFilterChange}
-                min="0"
-                step="0.01"
-              />
-            </div>
-            
-            <div className="filter-group">
-              <label>Status</label>
-              <select 
-                name="is_active" 
-                value={filters.is_active} 
-                onChange={handleFilterChange}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <div className="flex justify-between items-center">
+            <p className="text-gray-600">
+              Total Items: <span className="font-semibold">{items.length}</span>
+            </p>
+
+            <div className="flex gap-4">
+              <button
+                className="filter-button"
+                onClick={handleFilterToggle}
               >
-                <option value="">All</option>
-                <option value="true">Active</option>
-                <option value="false">Inactive</option>
-              </select>
+                <Filter className="w-5 h-5 mr-2" />
+                {showFilters ? 'Hide Filters' : 'Show Filters'}
+              </button>
+
+              <button
+                className="add-button"
+                onClick={handleAddClick}
+              >
+                + Add Item
+              </button>
             </div>
-            
-            <button 
-              className="clear-filters-button" 
-              onClick={handleClearFilters}
-            >
-              <FaTimes /> Clear Filters
-            </button>
-            
-            <button 
-              className="apply-filters-button" 
-              onClick={() => fetchItems()}
-            >
-              Apply Filters
-            </button>
           </div>
+
+          {showFilters && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="filter-field">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Min Price ($)</label>
+                  <input
+                    type="number"
+                    name="min_price"
+                    value={filters.min_price}
+                    onChange={handleFilterChange}
+                    min="0"
+                    step="0.01"
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  />
+                </div>
+                
+                <div className="filter-field">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Max Price ($)</label>
+                  <input
+                    type="number"
+                    name="max_price"
+                    value={filters.max_price}
+                    onChange={handleFilterChange}
+                    min="0"
+                    step="0.01"
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  />
+                </div>
+                
+                <div className="filter-field">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                  <select 
+                    name="is_active" 
+                    value={filters.is_active} 
+                    onChange={handleFilterChange}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="">All</option>
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="flex justify-end mt-4 gap-3">
+                <button 
+                  className="clear-filters-button" 
+                  onClick={handleClearFilters}
+                >
+                  <X className="w-4 h-4 mr-1" />
+                  Clear
+                </button>
+                
+                <button 
+                  className="apply-filters-button" 
+                  onClick={() => fetchItems()}
+                >
+                  Apply Filters
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {showForm ? (
+          <div className="form-container">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">{currentItem ? 'Edit Item' : 'Add New Item'}</h2>
+            <ItemForm 
+              item={currentItem} 
+              onSubmit={handleFormSubmit}
+              onCancel={handleFormCancel}
+            />
+          </div>
+        ) : (
+          <>
+            {items.length === 0 ? (
+              <div className="bg-white rounded-lg shadow-md p-12 text-center">
+                <p className="text-gray-500 text-lg">No items found.</p>
+                {searchTerm && (
+                  <p className="text-gray-400 mt-2">
+                    Try adjusting your search term or clear the search to see all items.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {items.map((item) => (
+                  <ItemCard 
+                    key={item.id} 
+                    item={item} 
+                    onEdit={handleEditClick}
+                    onDelete={handleDeleteClick}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
-
-      {showForm ? (
-        <div className="form-container">
-          <h2>{currentItem ? 'Edit Item' : 'Add New Item'}</h2>
-          <ItemForm 
-            item={currentItem} 
-            onSubmit={handleFormSubmit}
-            onCancel={handleFormCancel}
-          />
-        </div>
-      ) : (
-        <ItemGrid
-          items={items}
-          loading={loading}
-          error={error}
-          onEdit={handleEditClick}
-          onDelete={handleDeleteClick}
-        />
-      )}
     </div>
   );
 };
