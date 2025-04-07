@@ -16,6 +16,19 @@ router = APIRouter(
     tags=["items"],
 )
 
+# Helper function to convert string to boolean
+
+
+def str_to_bool(value: Optional[str]) -> Optional[bool]:
+    if value is None:
+        return None
+    value = value.lower()
+    if value in ('true', 't', 'yes', 'y', '1'):
+        return True
+    elif value in ('false', 'f', 'no', 'n', '0'):
+        return False
+    return None
+
 
 @router.post("/", response_model=Item, status_code=status.HTTP_201_CREATED)
 async def create_item(item: ItemCreate, db: Session = Depends(get_db)):
@@ -70,8 +83,8 @@ async def read_items(
     name: Optional[str] = Query(None, description="Filter by name"),
     min_price: Optional[int] = Query(None, ge=0, description="Minimum price"),
     max_price: Optional[int] = Query(None, ge=0, description="Maximum price"),
-    is_active: Optional[bool] = Query(
-        None, description="Filter by active status"),
+    is_active: Optional[str] = Query(
+        None, description="Filter by active status (true/false)"),
     db: Session = Depends(get_db)
 ):
     """
@@ -83,7 +96,7 @@ async def read_items(
         name: Filter by name (partial match)
         min_price: Filter by minimum price
         max_price: Filter by maximum price
-        is_active: Filter by active status
+        is_active: Filter by active status (true/false string)
         db: Database session
 
     Returns:
@@ -102,8 +115,12 @@ async def read_items(
             query = query.filter(ItemModel.price >= min_price)
         if max_price is not None:
             query = query.filter(ItemModel.price <= max_price)
-        if is_active is not None:
-            query = query.filter(ItemModel.is_active == is_active)
+
+        # Convert string 'true'/'false' to boolean
+        is_active_bool = str_to_bool(
+            is_active) if is_active is not None else None
+        if is_active_bool is not None:
+            query = query.filter(ItemModel.is_active == is_active_bool)
 
         items = query.offset(skip).limit(limit).all()
         return items

@@ -6,6 +6,7 @@ A simple RESTful API with CRUD operations using FastAPI and PostgreSQL.
 
 - Python 3.8+
 - PostgreSQL
+- Node.js 14+ and npm (for frontend)
 
 ## Setup
 
@@ -21,7 +22,7 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-3. Install dependencies:
+3. Install backend dependencies:
 ```bash
 pip install -r requirements.txt
 ```
@@ -35,18 +36,43 @@ Edit the `.env` file and update the `DATABASE_URL` with your PostgreSQL credenti
 createdb fastapi_crud
 ```
 
+6. Install frontend dependencies:
+```bash
+cd frontend
+npm install
+cd ..
+```
+
 ## Running the application
 
-Run the server with:
+### Running backend and frontend separately
+
+1. Start the backend server:
 ```bash
 python run.py
 ```
 
 The API will be available at http://localhost:8000
 
+2. Start the frontend development server:
+```bash
+cd frontend
+npm start
+```
+
+The frontend will be available at http://localhost:3000
+
+### Running both together
+
+For convenience, you can run both the backend and frontend with a single command:
+
+```bash
+./run_dev.sh
+```
+
 ## API Documentation
 
-Once the application is running, you can access:
+Once the backend is running, you can access:
 
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
@@ -60,6 +86,18 @@ Once the application is running, you can access:
 | POST | /items | Create a new item |
 | PUT | /items/{item_id} | Update an existing item |
 | DELETE | /items/{item_id} | Delete an item |
+
+## Frontend Features
+
+The React frontend provides a user-friendly interface for managing items:
+
+- View all items in a responsive card grid layout
+- Search and filter items by name, price range, and status
+- Add new items with form validation
+- Edit existing items
+- Delete items with confirmation
+- Toast notifications for actions
+- Responsive design for all devices
 
 ## Running Tests
 

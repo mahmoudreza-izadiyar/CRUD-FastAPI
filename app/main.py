@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.routes import item
 from app.database.database import engine
 from app.models import item as item_model
@@ -10,6 +11,15 @@ app = FastAPI(
     title="FastAPI CRUD with PostgreSQL",
     description="A simple API with CRUD operations using FastAPI and PostgreSQL",
     version="0.1.0",
+)
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # React frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
 )
 
 # Include routers
