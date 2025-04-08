@@ -1,0 +1,142 @@
+.star-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Star styles */
+.star {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* Star icon base style */
+.star-icon {
+  display: block;
+  line-height: 1;
+}
+
+/* Star states */
+.star-empty .star-icon {
+  color: #ddd;
+}
+
+.star-full .star-icon {
+  color: #ffb400;
+}
+
+.star-half {
+  position: relative;
+}
+
+.star-half .star-icon {
+  color: #ddd;
+}
+
+.star-half::before {
+  content: "★";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #ffb400;
+}
+
+/* Star sizes */
+.star-small {
+  font-size: 16px;
+}
+
+.star-medium {
+  font-size: 24px;
+}
+
+.star-large {
+  font-size: 32px;
+}
+
+/* Focus state for buttons */
+button.star:focus {
+  outline: none;
+}
+
+button.star:focus-visible {
+  box-shadow: 0 0 0 2px rgba(255, 180, 0, 0.4);
+  border-radius: 50%;
+}
+
+/* For accessibility - ensures interactive stars show correct cursor */
+button.star {
+  cursor: pointer;
+}
+
+/* Animation for hover */
+@media (hover: hover) {
+  button.star:hover .star-icon {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+  }
+}
+
+/* Compact mobile layout */
+@media (max-width: 480px) {
+  .star-rating {
+    gap: 2px;
+  }
+  
+  .star-small {
+    font-size: 14px;
+  }
+  
+  .star-medium {
+    font-size: 20px;
+  }
+  
+  .star-large {
+    font-size: 28px;
+  }
+}
+
+/* Interactive styles */
+.interactive .star-container {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.interactive .star-container:hover {
+  transform: scale(1.1);
+}
+
+/* Rating value display */
+.rating-value {
+  margin-left: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+/* Filled and empty star colors */
+.filled .star-icon {
+  stroke: #ffd700; /* Gold */
+  fill: #ffd700;
+}
+
+.empty .star-icon {
+  stroke: #9ca3af; /* Gray */
+  fill: none;
+}
+
+/* Hover animations */
+.interactive .star-container.filled:hover .star-icon,
+.interactive .star-container.empty:hover .star-icon {
+  transform: rotate(0deg) scale(1.1);
+  transition: transform 0.2s ease, fill 0.2s ease, stroke 0.2s ease;
+} 

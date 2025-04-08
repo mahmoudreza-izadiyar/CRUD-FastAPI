@@ -1,0 +1,172 @@
+.rating-list-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.rating-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.rating-list-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.rating-sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sort-select {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.no-ratings {
+  padding: 30px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+.ratings-list {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.rating-item {
+  display: flex;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.rating-item:last-child {
+  border-bottom: none;
+}
+
+.rating-user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px;
+  min-width: 80px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.username {
+  font-size: 0.85rem;
+  color: #555;
+  text-align: center;
+  word-break: break-word;
+  max-width: 100px;
+}
+
+.rating-details {
+  flex: 1;
+}
+
+.rating-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.rating-date {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.rating-comment {
+  margin-bottom: 15px;
+}
+
+.rating-comment p {
+  margin: 0;
+  line-height: 1.5;
+  color: #444;
+}
+
+.rating-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-button, .delete-button {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s;
+}
+
+.edit-button {
+  background-color: #f0f0f0;
+  color: #555;
+}
+
+.edit-button:hover {
+  background-color: #e0e0e0;
+}
+
+.delete-button {
+  background-color: #fff0f0;
+  color: #d32f2f;
+}
+
+.delete-button:hover {
+  background-color: #ffe0e0;
+}
+
+@media (max-width: 600px) {
+  .rating-item {
+    flex-direction: column;
+  }
+  
+  .rating-user {
+    flex-direction: row;
+    margin-right: 0;
+    margin-bottom: 10px;
+    min-width: auto;
+  }
+  
+  .user-avatar {
+    margin-right: 10px;
+    margin-bottom: 0;
+  }
+  
+  .rating-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .rating-date {
+    margin-top: 5px;
+  }
+}

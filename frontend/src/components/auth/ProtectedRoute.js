@@ -1,26 +1,30 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
+/**
+ * ProtectedRoute component that checks if user is authenticated before 
+ * rendering children components
+ * 
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Child components to render if authenticated
+ * @returns {React.ReactElement} The protected route component
+ */
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, initialized, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
 
-  // If auth is still initializing, show nothing (or a loading spinner)
-  if (!initialized || loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+  // Show nothing while checking authentication status
+  if (loading) {
+    return null;
   }
 
-  // If user is not authenticated, redirect to login
+  // Redirect to login if not authenticated, preserving the intended destination
   if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
-  // Otherwise, render the protected component
+  // User is authenticated, render children
   return children;
 };
 

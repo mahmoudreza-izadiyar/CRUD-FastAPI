@@ -1,34 +1,62 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import item, auth
-from app.database.database import engine
-from app.models import item as item_model
-from app.models import user as user_model
+from app.api.endpoints import items, users, auth, businesses
+from app.database.database import engine, Base
 
-# Create the database tables
-item_model.Base.metadata.create_all(bind=engine)
-user_model.Base.metadata.create_all(bind=engine)
+# Create database tables
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="FastAPI CRUD with PostgreSQL",
-    description="A simple API with CRUD operations using FastAPI and PostgreSQL",
-    version="0.1.0",
+    title="FastAPI CRUD App",
+    description="A simple CRUD API using FastAPI",
+    version="0.1.0"
 )
 
-# Add CORS middleware
+# Configure CORS
+origins = [
+    "http://localhost:3000",  # React frontend
+    "http://127.0.0.1:3000"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React frontend URL
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all methods
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Include routers
-app.include_router(item.router)
-app.include_router(auth.router)
+app.include_router(
+    auth.router,
+    prefix="/api/auth",
+    tags=["Authentication"]
+)
+
+app.include_router(
+    users.router,
+    prefix="/api/users",
+    tags=["Users"]
+)
+
+app.include_router(
+    items.router,
+    prefix="/api/items",
+    tags=["Items"]
+)
+
+app.include_router(
+    businesses.router,
+    prefix="/api/businesses",
+    tags=["Businesses"]
+)
 
 
 @app.get("/")
-def root():
-    return {"message": "Welcome to FastAPI CRUD API"}
+def read_root():
+    return {"message": "Welcome to the FastAPI CRUD API!"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

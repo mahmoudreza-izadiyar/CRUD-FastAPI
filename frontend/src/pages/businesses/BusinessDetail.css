@@ -1,0 +1,215 @@
+.business-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.business-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: #007bff;
+}
+
+.business-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-business-button, .delete-business-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-business-button {
+  background-color: #f0f0f0;
+  color: #333;
+  text-decoration: none;
+  border: none;
+}
+
+.edit-business-button:hover {
+  background-color: #e0e0e0;
+}
+
+.delete-business-button {
+  background-color: #fff0f0;
+  color: #d32f2f;
+  border: none;
+}
+
+.delete-business-button:hover {
+  background-color: #ffe0e0;
+}
+
+.business-detail-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.business-main-info {
+  flex: 2;
+  min-width: 300px;
+}
+
+.business-main-info h1 {
+  margin: 0 0 10px 0;
+  font-size: 2.2rem;
+  color: #333;
+}
+
+.business-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.business-rating {
+  font-weight: 600;
+  color: #333;
+}
+
+.rating-count {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.business-description {
+  margin-top: 20px;
+}
+
+.business-description p {
+  margin: 0;
+  line-height: 1.6;
+  color: #444;
+}
+
+.business-contact-info {
+  flex: 1;
+  min-width: 250px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.contact-item {
+  display: flex;
+  gap: 12px;
+}
+
+.contact-icon {
+  color: #007bff;
+  display: flex;
+  align-items: flex-start;
+  margin-top: 2px;
+}
+
+.contact-text {
+  display: flex;
+  flex-direction: column;
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.contact-text a {
+  color: #555;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.contact-text a:hover {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.business-detail-ratings {
+  margin-top: 40px;
+}
+
+.ratings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.ratings-header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: #333;
+}
+
+.add-rating-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-rating-button:hover {
+  background-color: #0069d9;
+}
+
+.loading-message, .error-message, .not-found-message {
+  text-align: center;
+  padding: 50px;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.error-message {
+  color: #d32f2f;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .business-detail-header, 
+  .business-detail-content,
+  .ratings-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .business-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .business-main-info h1 {
+    font-size: 1.8rem;
+  }
+} 

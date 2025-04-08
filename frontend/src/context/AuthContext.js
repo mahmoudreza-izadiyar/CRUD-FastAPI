@@ -1,121 +1,136 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import * as authService from '../api/authService';
+import axios from 'axios';
+import { ENDPOINTS, DEFAULT_HEADERS } from '../services/apiConfig';
 import toast from 'react-hot-toast';
 
-// Create the auth context
-const AuthContext = createContext();
+// Create the context
+const AuthContext = createContext(null);
 
-// Auth context provider component
+// Provider component that wraps your app and makes auth available to any child component
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [initialized, setInitialized] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem('token'));
 
-  // Initialize auth state on component mount
+  // Initialize auth state from localStorage on component mount
   useEffect(() => {
-    const initAuth = async () => {
-      try {
-        // Setup axios auth header
-        authService.initializeAuth();
-        
-        // Only fetch user data if user is logged in
-        if (authService.isLoggedIn()) {
-          const userData = await authService.getCurrentUser();
-          setUser(userData);
+    const initializeAuth = async () => {
+      const storedToken = localStorage.getItem('token');
+      
+      if (storedToken) {
+        setToken(storedToken);
+        try {
+          const response = await axios.get(`${ENDPOINTS.USERS}/me`, {
+            headers: {
+              ...DEFAULT_HEADERS,
+              Authorization: `Bearer ${storedToken}`
+            }
+          });
+          setUser(response.data);
+        } catch (error) {
+          console.error('Failed to fetch user data:', error);
+          localStorage.removeItem('token');
+          setToken(null);
         }
-      } catch (error) {
-        console.error('Failed to initialize auth:', error);
-        // In case of error, clear any invalid tokens
-        if (error.response && error.response.status === 401) {
-          toast.error('Session expired. Please log in again.');
-        }
-      } finally {
-        setLoading(false);
-        setInitialized(true);
       }
+      
+      setLoading(false);
     };
 
-    initAuth();
+    initializeAuth();
   }, []);
 
-  // Login handler
+  // Login functionality
   const login = async (username, password) => {
-    setLoading(true);
     try {
-      await authService.login(username, password);
-      const userData = await authService.getCurrentUser();
-      setUser(userData);
+      const response = await axios.post(`${ENDPOINTS.AUTH}/token`, 
+        // Form data for token endpoint
+        new URLSearchParams({
+          username,
+          password
+        }), 
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }
+      );
+      
+      const { access_token, token_type } = response.data;
+      const tokenValue = `${token_type} ${access_token}`;
+      
+      localStorage.setItem('token', tokenValue);
+      setToken(tokenValue);
+      
+      // Fetch user details
+      const userResponse = await axios.get(`${ENDPOINTS.USERS}/me`, {
+        headers: {
+          ...DEFAULT_HEADERS,
+          Authorization: tokenValue
+        }
+      });
+      
+      setUser(userResponse.data);
       toast.success('Login successful!');
       return true;
     } catch (error) {
-      let errorMessage = 'Login failed. Please try again.';
-      if (error.response && error.response.data && error.response.data.detail) {
-        errorMessage = error.response.data.detail;
-      }
-      toast.error(errorMessage);
+      console.error('Login failed:', error);
+      toast.error(error.response?.data?.detail || 'Login failed. Please try again.');
       return false;
-    } finally {
-      setLoading(false);
     }
   };
 
-  // Register handler
-  const register = async (userData) => {
-    setLoading(true);
+  // Register functionality
+  const register = async (email, username, password) => {
     try {
-      await authService.register(userData);
+      await axios.post(`${ENDPOINTS.USERS}`, {
+        email,
+        username,
+        password
+      }, {
+        headers: DEFAULT_HEADERS
+      });
+      
       toast.success('Registration successful! You can now log in.');
       return true;
     } catch (error) {
-      let errorMessage = 'Registration failed. Please try again.';
-      if (error.response && error.response.data && error.response.data.detail) {
-        errorMessage = error.response.data.detail;
-      }
-      toast.error(errorMessage);
+      console.error('Registration failed:', error);
+      toast.error(error.response?.data?.detail || 'Registration failed. Please try again.');
       return false;
-    } finally {
-      setLoading(false);
     }
   };
 
-  // Logout handler
-  const logout = async () => {
-    setLoading(true);
-    try {
-      await authService.logout();
-      setUser(null);
-      toast.success('Logged out successfully');
-      return true;
-    } catch (error) {
-      console.error('Logout failed:', error);
-      // Even if logout fails on the server, we still log out the user locally
-      setUser(null);
-      toast.success('Logged out successfully');
-      return true;
-    } finally {
-      setLoading(false);
-    }
+  // Logout functionality
+  const logout = () => {
+    localStorage.removeItem('token');
+    setToken(null);
+    setUser(null);
+    toast.success('You have been logged out.');
   };
 
-  // Context value
+  // Check if user is authenticated
+  const isAuthenticated = !!token && !!user;
+
+  // Context value to be provided
   const value = {
     user,
     loading,
-    initialized,
-    isAuthenticated: !!user,
+    isAuthenticated,
     login,
     register,
-    logout,
+    logout
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// Custom hook to use the auth context
+// Custom hook that shorthands the useContext(AuthContext)
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === null) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-}; 
+};
+
+export default AuthContext; 
